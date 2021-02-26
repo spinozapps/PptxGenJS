@@ -1,4 +1,4 @@
-/* PptxGenJS 3.5.0-beta @ 2021-01-14T05:37:45.214Z */
+/* PptxGenJS 3.5.0-beta @ 2021-02-26T01:05:33.770Z */
 'use strict';
 
 var JSZip = require('jszip');
@@ -237,8 +237,8 @@ var ShapeType;
     ShapeType["mathNotEqual"] = "mathNotEqual";
     ShapeType["mathPlus"] = "mathPlus";
     ShapeType["moon"] = "moon";
-    ShapeType["nonIsoscelesTrapezoid"] = "nonIsoscelesTrapezoid";
     ShapeType["noSmoking"] = "noSmoking";
+    ShapeType["nonIsoscelesTrapezoid"] = "nonIsoscelesTrapezoid";
     ShapeType["notchedRightArrow"] = "notchedRightArrow";
     ShapeType["octagon"] = "octagon";
     ShapeType["parallelogram"] = "parallelogram";
@@ -2102,8 +2102,12 @@ function genXmlParagraphProperties(textObj, isDefault) {
                     break;
             }
         }
-        if (textObj.options.lineSpacing)
+        if (textObj.options.lineSpacing) {
             strXmlLnSpc = "<a:lnSpc><a:spcPts val=\"" + Math.round(textObj.options.lineSpacing * 100) + "\"/></a:lnSpc>";
+        }
+        else if (textObj.options.lineSpacingMultiple) {
+            strXmlLnSpc = "<a:lnSpc><a:spcPct val=\"" + Math.round(textObj.options.lineSpacingMultiple * 100000) + "\"/></a:lnSpc>";
+        }
         // OPTION: indent
         if (textObj.options.indentLevel && !isNaN(Number(textObj.options.indentLevel)) && textObj.options.indentLevel > 0) {
             paragraphPropXml += " lvl=\"" + textObj.options.indentLevel + "\"";
@@ -2471,9 +2475,14 @@ function genXmlTextBody(slideObj) {
         line.forEach(function (textObj, idx) {
             // A: Set line index
             textObj.options._lineIdx = idx;
+            // A.1: Add soft break if not the first run of the line.
+            if (idx > 0 && textObj.options.softBreakBefore) {
+                strSlideXml += "<a:br/>";
+            }
             // B: Inherit pPr-type options from parent shape's `options`
             textObj.options.align = textObj.options.align || opts.align;
             textObj.options.lineSpacing = textObj.options.lineSpacing || opts.lineSpacing;
+            textObj.options.lineSpacingMultiple = textObj.options.lineSpacingMultiple || opts.lineSpacingMultiple;
             textObj.options.indentLevel = textObj.options.indentLevel || opts.indentLevel;
             textObj.options.paraSpaceBefore = textObj.options.paraSpaceBefore || opts.paraSpaceBefore;
             textObj.options.paraSpaceAfter = textObj.options.paraSpaceAfter || opts.paraSpaceAfter;
@@ -3890,6 +3899,7 @@ function addTextDefinition(target, text, opts, isPlaceholder) {
         }
         // C
         newObject.options.lineSpacing = opt.lineSpacing && !isNaN(opt.lineSpacing) ? opt.lineSpacing : null;
+        newObject.options.lineSpacingMultiple = opt.lineSpacingMultiple && !isNaN(opt.lineSpacingMultiple) ? opt.lineSpacingMultiple : null;
         // D: Transform text options to bodyProperties as thats how we build XML
         newObject.options._bodyProp.autoFit = opt.autoFit || false; // @deprecated (3.3.0) If true, shape will collapse to text size (Fit To shape)
         newObject.options._bodyProp.anchor = !opt.placeholder ? TEXT_VALIGN.ctr : null; // VALS: [t,ctr,b]
@@ -6099,7 +6109,7 @@ function createSvgPngPreview(rel) {
 |*|  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 |*|  SOFTWARE.
 \*/
-var VERSION = '3.5.0-beta-20210113-2330';
+var VERSION = '3.5.0-beta-20210225-1905';
 var PptxGenJS = /** @class */ (function () {
     function PptxGenJS() {
         var _this = this;
