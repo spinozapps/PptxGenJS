@@ -1,4 +1,4 @@
-/* PptxGenJS 3.5.0-beta @ 2021-02-26T01:05:33.779Z */
+/* PptxGenJS 3.5.0-beta @ 2021-02-26T01:42:38.838Z */
 import JSZip from 'jszip';
 
 /**
@@ -1630,10 +1630,10 @@ function slideObjectToXml(slide) {
                         if (!Array.isArray(cellMargin) && typeof cellMargin === 'number')
                             cellMargin = [cellMargin, cellMargin, cellMargin, cellMargin];
                         var cellMarginXml = " marL=\"" + valToPts(cellMargin[3]) + "\" marR=\"" + valToPts(cellMargin[1]) + "\" marT=\"" + valToPts(cellMargin[0]) + "\" marB=\"" + valToPts(cellMargin[2]) + "\"";
+                        var cellTextDir = cellOpts['vert'] ? " vert=\"" + cellOpts['vert'] + "\"" : '';
                         // FUTURE: Cell NOWRAP property (textwrap: add to a:tcPr (horzOverflow="overflow" or whatever options exist)
                         // 4: Set CELL content and properties ==================================
-                        strXml_1 += "<a:tc" + cellSpanAttrStr + ">" + genXmlTextBody(cell) + "<a:tcPr" + cellMarginXml + cellValign + ">";
-                        //strXml += `<a:tc${cellColspan}${cellRowspan}>${genXmlTextBody(cell)}<a:tcPr${cellMarginXml}${cellValign}${cellTextDir}>`
+                        strXml_1 += "<a:tc" + cellSpanAttrStr + ">" + genXmlTextBody(cell) + "<a:tcPr" + cellMarginXml + cellValign + cellTextDir + ">";
                         // FIXME: 20200525: ^^^
                         // <a:tcPr marL="38100" marR="38100" marT="38100" marB="38100" vert="vert270">
                         // 5: Borders: Add any borders
@@ -2470,9 +2470,6 @@ function genXmlTextBody(slideObj) {
             // A: Set line index
             textObj.options._lineIdx = idx;
             // A.1: Add soft break if not the first run of the line.
-            if (idx > 0 && textObj.options.softBreakBefore) {
-                strSlideXml += "<a:br/>";
-            }
             // B: Inherit pPr-type options from parent shape's `options`
             textObj.options.align = textObj.options.align || opts.align;
             textObj.options.lineSpacing = textObj.options.lineSpacing || opts.lineSpacing;
