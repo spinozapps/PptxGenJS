@@ -1,6 +1,6 @@
 {
-  "name": "pptxgenjs",
-  "version": "3.8.0",
+  "name": "@spinozapps/pptxgenjs",
+  "version": "3.8.0-spinozapps.6",
   "author": {
     "name": "Brent Ely",
     "url": "https://github.com/gitbrent/"

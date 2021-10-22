@@ -11,6 +11,52 @@
 
 [![Known Vulnerabilities](https://snyk.io/test/npm/pptxgenjs/badge.svg)](https://snyk.io/test/npm/pptxgenjs) [![npm downloads](https://img.shields.io/npm/dm/pptxgenjs.svg)](https://www.npmjs.com/package/pptxgenjs) [![jsdelivr downloads](https://data.jsdelivr.com/v1/package/gh/gitbrent/pptxgenjs/badge)](https://www.jsdelivr.com/package/gh/gitbrent/pptxgenjs) [![typescripts definitions](https://img.shields.io/npm/types/pptxgenjs)](https://img.shields.io/npm/types/pptxgenjs)
 
+# Spinozapps additions
+
+This package is a variation of https://github.com/gitbrent/PptxGenJS with changes we proposed as pull requests integrated, and published under our NPM organization:
+
+```sh
+git clone git@github.com:gitbrent/PptxGenJS.git
+git remote add spinozapps git@github.com:spinozapps/PptxGenJS.git
+
+# Start from base version
+git checkout v3.8.0
+
+# https://github.com/gitbrent/PptxGenJS/pull/1016
+git cherry-pick 3f9c227
+
+# https://github.com/gitbrent/PptxGenJS/pull/1017
+git cherry-pick 9267644
+
+# https://github.com/gitbrent/PptxGenJS/pull/1021
+git cherry-pick 274fc9d30c665af30d352a629a86ae97f4913aed
+
+# https://github.com/gitbrent/PptxGenJS/pull/1025
+git cherry-pick d9ec9a574a27727b2f84136c408b20ff294ddf10
+
+# https://github.com/gitbrent/PptxGenJS/pull/1032
+git cherry-pick 16708254b2002e9d936fb43e27531df3048a60a9
+
+# Include build steps, look for commit id in https://github.com/spinozapps/PptxGenJS
+# Note: there will be a conflict on package.json version field, set it to the next version to be published
+git cherry-pick xxx
+
+# Update steps + modify last commit with them
+git commit --amend
+
+# Build library
+docker build . -t pptxgenjs
+
+# Test it locally
+docker run --rm -v $(pwd):/shared pptxgenjs cp /app/dist/* /shared
+
+# Publish (set NPM_TOKEN to an actual token created on https://www.npmjs.com/ > Profile picture > Access Tokens)
+docker run --rm -e NPM_TOKEN=... pptxgenjs npm publish --access public
+
+git tag v3.8.0-spinozapps.6
+git push spinozapps v3.8.0-spinozapps.6
+```
+
 # Table of Contents
 
 - [Table of Contents](#table-of-contents)
