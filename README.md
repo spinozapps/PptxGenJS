@@ -11,6 +11,34 @@
 
 [![Known Vulnerabilities](https://snyk.io/test/npm/pptxgenjs/badge.svg)](https://snyk.io/test/npm/pptxgenjs) [![npm downloads](https://img.shields.io/npm/dm/pptxgenjs.svg)](https://www.npmjs.com/package/pptxgenjs) [![jsdelivr downloads](https://data.jsdelivr.com/v1/package/gh/gitbrent/pptxgenjs/badge)](https://www.jsdelivr.com/package/gh/gitbrent/pptxgenjs) [![typescripts definitions](https://img.shields.io/npm/types/pptxgenjs)](https://img.shields.io/npm/types/pptxgenjs)
 
+# Spinozapps additions
+
+This package is a variation of https://github.com/gitbrent/PptxGenJS with changes we proposed as pull requests integrated, and published under our NPM organization:
+
+```sh
+git clone git@github.com:gitbrent/PptxGenJS.git
+git remote add spinozapps git@github.com:spinozapps/PptxGenJS.git
+
+# Start from base version
+git reset --hard v3.8.0
+
+# https://github.com/gitbrent/PptxGenJS/pull/1016
+git cherry-pick 3f9c227
+
+# Include build steps, look for commit id in https://github.com/spinozapps/PptxGenJS
+# Note: there will be a conflict on package.json version field, set it to the next version to be published
+git cherry-pick xxx
+
+# Build library
+docker build . -t pptxgenjs
+
+# Publish (set NPM_TOKEN to an actual token created on https://www.npmjs.com/ > Profile picture > Access Tokens)
+docker run --rm -e NPM_TOKEN=... pptxgenjs npm publish --access public
+
+git tag vXXX
+git push spinozapps vXXX
+```
+
 # Table of Contents
 
 - [Table of Contents](#table-of-contents)
