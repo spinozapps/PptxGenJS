@@ -1,4 +1,4 @@
-/* PptxGenJS 3.9.0 @ 2021-12-11T18:00:42.636Z */
+/* PptxGenJS 3.9.0-spinozapps.1 @ 2022-01-31T08:17:49.711Z */
 'use strict';
 
 var JSZip = require('jszip');
@@ -2332,11 +2332,12 @@ function genXmlParagraphProperties(textObj, isDefault) {
         // NOTE: OOXML uses the unicode character set for Bullets
         // EX: Unicode Character 'BULLET' (U+2022) ==> '<a:buChar char="&#x2022;"/>'
         if (typeof textObj.options.bullet === 'object') {
-            if (textObj && textObj.options && textObj.options.bullet && textObj.options.bullet.indent)
+            if (textObj.options.bullet.indent)
                 bulletMarL = valToPts(textObj.options.bullet.indent);
+            var bulletCancelling = textObj.options.bullet.cancelling ? valToPts(textObj.options.bullet.cancelling) : bulletMarL;
             if (textObj.options.bullet.type) {
                 if (textObj.options.bullet.type.toString().toLowerCase() === 'number') {
-                    paragraphPropXml += " marL=\"" + (textObj.options.indentLevel && textObj.options.indentLevel > 0 ? bulletMarL + bulletMarL * textObj.options.indentLevel : bulletMarL) + "\" indent=\"-" + bulletMarL + "\"";
+                    paragraphPropXml += " marL=\"" + (textObj.options.indentLevel && textObj.options.indentLevel > 0 ? bulletMarL + bulletMarL * textObj.options.indentLevel : bulletMarL) + "\" indent=\"-" + bulletCancelling + "\"";
                     strXmlBullet = "<a:buSzPct val=\"100000\"/><a:buFont typeface=\"+mj-lt\"/><a:buAutoNum type=\"" + (textObj.options.bullet.style || 'arabicPeriod') + "\" startAt=\"" + (textObj.options.bullet.numberStartAt || textObj.options.bullet.startAt || '1') + "\"/>";
                 }
             }
@@ -2347,7 +2348,7 @@ function genXmlParagraphProperties(textObj, isDefault) {
                     console.warn('Warning: `bullet.characterCode should be a 4-digit unicode charatcer (ex: 22AB)`!');
                     bulletCode = BULLET_TYPES['DEFAULT'];
                 }
-                paragraphPropXml += " marL=\"" + (textObj.options.indentLevel && textObj.options.indentLevel > 0 ? bulletMarL + bulletMarL * textObj.options.indentLevel : bulletMarL) + "\" indent=\"-" + bulletMarL + "\"";
+                paragraphPropXml += " marL=\"" + (textObj.options.indentLevel && textObj.options.indentLevel > 0 ? bulletMarL + bulletMarL * textObj.options.indentLevel : bulletMarL) + "\" indent=\"-" + bulletCancelling + "\"";
                 strXmlBullet = '<a:buSzPct val="100000"/><a:buChar char="' + bulletCode + '"/>';
             }
             else if (textObj.options.bullet.code) {
@@ -2358,7 +2359,7 @@ function genXmlParagraphProperties(textObj, isDefault) {
                     console.warn('Warning: `bullet.code should be a 4-digit hex code (ex: 22AB)`!');
                     bulletCode = BULLET_TYPES['DEFAULT'];
                 }
-                paragraphPropXml += " marL=\"" + (textObj.options.indentLevel && textObj.options.indentLevel > 0 ? bulletMarL + bulletMarL * textObj.options.indentLevel : bulletMarL) + "\" indent=\"-" + bulletMarL + "\"";
+                paragraphPropXml += " marL=\"" + (textObj.options.indentLevel && textObj.options.indentLevel > 0 ? bulletMarL + bulletMarL * textObj.options.indentLevel : bulletMarL) + "\" indent=\"-" + bulletCancelling + "\"";
                 strXmlBullet = '<a:buSzPct val="100000"/><a:buChar char="' + bulletCode + '"/>';
             }
             else {
@@ -5002,11 +5003,24 @@ function makeXmlCharts(rel) {
         strXml += '  </c:spPr>';
         strXml += '</c:plotArea>';
         // OPTION: Legend
-        // IMPORTANT: Dont specify layout to enable auto-fit: PPT does a great job maximizing space with all 4 TRBL locations
+        // RECOMMENDED: Dont specify layout to enable auto-fit: PPT does a great job maximizing space with all 4 TRBL locations
         if (rel.opts.showLegend) {
             strXml += '<c:legend>';
-            strXml += '<c:legendPos val="' + rel.opts.legendPos + '"/>';
-            //strXml += '<c:layout/>'
+            if (rel.opts.legendLayout) {
+                strXml += '<c:layout>';
+                strXml += ' <c:manualLayout>';
+                strXml += '  <c:xMode val="edge" />';
+                strXml += '  <c:yMode val="edge" />';
+                strXml += '  <c:x val="' + (rel.opts.legendLayout.x || 0) + '" />';
+                strXml += '  <c:y val="' + (rel.opts.legendLayout.y || 0) + '" />';
+                strXml += '  <c:w val="' + (rel.opts.legendLayout.w || 1) + '" />';
+                strXml += '  <c:h val="' + (rel.opts.legendLayout.h || 0.25) + '" />';
+                strXml += ' </c:manualLayout>';
+                strXml += '</c:layout>';
+            }
+            else {
+                strXml += '<c:legendPos val="' + rel.opts.legendPos + '"/>';
+            }
             strXml += '<c:overlay val="0"/>';
             if (rel.opts.legendFontFace || rel.opts.legendFontSize || rel.opts.legendColor) {
                 strXml += '<c:txPr>';
