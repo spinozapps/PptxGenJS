@@ -919,13 +919,14 @@ function genXmlParagraphProperties(textObj: ISlideObject | TextProps, isDefault:
 		// NOTE: OOXML uses the unicode character set for Bullets
 		// EX: Unicode Character 'BULLET' (U+2022) ==> '<a:buChar char="&#x2022;"/>'
 		if (typeof textObj.options.bullet === 'object') {
-			if (textObj && textObj.options && textObj.options.bullet && textObj.options.bullet.indent) bulletMarL = valToPts(textObj.options.bullet.indent)
+			if (textObj.options.bullet.indent) bulletMarL = valToPts(textObj.options.bullet.indent)
+			let bulletCancelling = textObj.options.bullet.cancelling ? valToPts(textObj.options.bullet.cancelling) : bulletMarL
 
 			if (textObj.options.bullet.type) {
 				if (textObj.options.bullet.type.toString().toLowerCase() === 'number') {
 					paragraphPropXml += ` marL="${
 						textObj.options.indentLevel && textObj.options.indentLevel > 0 ? bulletMarL + bulletMarL * textObj.options.indentLevel : bulletMarL
-					}" indent="-${bulletMarL}"`
+					}" indent="-${bulletCancelling}"`
 					strXmlBullet = `<a:buSzPct val="100000"/><a:buFont typeface="+mj-lt"/><a:buAutoNum type="${textObj.options.bullet.style || 'arabicPeriod'}" startAt="${
 						textObj.options.bullet.numberStartAt || textObj.options.bullet.startAt || '1'
 					}"/>`
@@ -941,7 +942,7 @@ function genXmlParagraphProperties(textObj: ISlideObject | TextProps, isDefault:
 
 				paragraphPropXml += ` marL="${
 					textObj.options.indentLevel && textObj.options.indentLevel > 0 ? bulletMarL + bulletMarL * textObj.options.indentLevel : bulletMarL
-				}" indent="-${bulletMarL}"`
+				}" indent="-${bulletCancelling}"`
 				strXmlBullet = '<a:buSzPct val="100000"/><a:buChar char="' + bulletCode + '"/>'
 			} else if (textObj.options.bullet.code) {
 				// @deprecated `bullet.code` v3.3.0
@@ -955,7 +956,7 @@ function genXmlParagraphProperties(textObj: ISlideObject | TextProps, isDefault:
 
 				paragraphPropXml += ` marL="${
 					textObj.options.indentLevel && textObj.options.indentLevel > 0 ? bulletMarL + bulletMarL * textObj.options.indentLevel : bulletMarL
-				}" indent="-${bulletMarL}"`
+				}" indent="-${bulletCancelling}"`
 				strXmlBullet = '<a:buSzPct val="100000"/><a:buChar char="' + bulletCode + '"/>'
 			} else {
 				paragraphPropXml += ` marL="${
