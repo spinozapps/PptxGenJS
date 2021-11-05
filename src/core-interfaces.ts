@@ -291,6 +291,13 @@ export interface TextBaseProps {
 		 */
 		indent?: number
 		/**
+		 * Bulle cancelling (space between bullet and text) (points)
+		 * @since v3.10.0
+		 * @default 27 // set to indent value
+		 * @example 10 // Indents text 10 points from bullet
+		 */
+		cancelling?: number
+		/**
 		 * Number type
 		 * @since v3.3.0
 		 * @example 'romanLcParenR' // roman numerals lower-case with paranthesis right
