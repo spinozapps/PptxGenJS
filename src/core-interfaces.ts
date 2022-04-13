@@ -1108,6 +1108,7 @@ export interface IChartPropsBase {
 	showLeaderLines?: boolean
 	showLegend?: boolean
 	showPercent?: boolean
+	showSerName?: boolean,
 	showTitle?: boolean
 	showValue?: boolean
 	/**
@@ -1126,6 +1127,7 @@ export interface IChartPropsAxisCat {
 	 */
 	catAxes?: IChartPropsAxisCat[]
 	catAxisBaseTimeUnit?: string
+	catAxisCrossesAt?: string | number,
 	catAxisHidden?: boolean
 	catAxisLabelColor?: string
 	catAxisLabelFontBold?: boolean
