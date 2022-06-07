@@ -1282,7 +1282,7 @@ function makeChartType(chartType: CHART_NAME, data: OptsChartData[], opts: IChar
 				strXml += '  <c:tx>'
 				strXml += '    <c:strRef>'
 				strXml += '      <c:f>Sheet1!$' + LETTERS[idxColLtr] + '$1</c:f>'
-				strXml += '      <c:strCache><c:ptCount val="1"/><c:pt idx="0"><c:v>' + obj.name + '</c:v></c:pt></c:strCache>'
+				strXml += '      <c:strCache><c:ptCount val="1"/><c:pt idx="0"><c:v>' + encodeXmlEntities(obj.name) + '</c:v></c:pt></c:strCache>'
 				strXml += '    </c:strRef>'
 				strXml += '  </c:tx>'
 
