@@ -1270,6 +1270,7 @@ export interface IChartPropsChartDoughnut {
 	dataNoEffects?: boolean
 	holeSize?: number
 }
+export type ChartLineCap = 'flat' | 'square' | 'round'
 export interface IChartPropsChartLine {
 	lineDash?: 'dash' | 'dashDot' | 'lgDash' | 'lgDashDot' | 'lgDashDotDot' | 'solid' | 'sysDash' | 'sysDot'
 	lineDataSymbol?: 'circle' | 'dash' | 'diamond' | 'dot' | 'none' | 'square' | 'triangle'
@@ -1277,6 +1278,12 @@ export interface IChartPropsChartLine {
 	lineDataSymbolLineSize?: number
 	lineDataSymbolSize?: number
 	lineSize?: number
+	/**
+	 * MS-PPT > Chart format > Format Data Series > Line > Cap type
+	 * - line cap type
+	 * @default flat
+	 */
+	lineCap?: ChartLineCap
 	lineSmooth?: boolean
 }
 export interface IChartPropsChartPie {

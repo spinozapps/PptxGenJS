@@ -19,7 +19,7 @@ import {
 	LETTERS,
 	ONEPT,
 } from './core-enums'
-import { IChartOptsLib, ISlideRelChart, ShadowProps, OptsChartData, IChartPropsTitle, OptsChartGridLine } from './core-interfaces'
+import { IChartOptsLib, ISlideRelChart, ShadowProps, OptsChartData, IChartPropsTitle, OptsChartGridLine, ChartLineCap } from './core-interfaces'
 import { createColorElement, genXmlColorSelection, convertRotationDegrees, encodeXmlEntities, getMix, getUuid, valToPts } from './gen-utils'
 import JSZip from 'jszip'
 
@@ -729,14 +729,14 @@ function makeChartType(chartType: CHART_NAME, data: OptsChartData[], opts: IChar
 					if (opts.lineSize === 0) {
 						strXml += '<a:ln><a:noFill/></a:ln>'
 					} else {
-						strXml += '<a:ln w="' + valToPts(opts.lineSize) + '" cap="flat"><a:solidFill>' + createColorElement(seriesColor) + '</a:solidFill>'
+						strXml += '<a:ln w="' + valToPts(opts.lineSize) + '" cap="' + createLineCap(opts.lineCap) + '"><a:solidFill>' + createColorElement(seriesColor) + '</a:solidFill>'
 						strXml += '<a:prstDash val="' + (opts.lineDash || 'solid') + '"/><a:round/></a:ln>'
 					}
 				} else if (opts.dataBorder) {
 					strXml +=
 						'<a:ln w="' +
 						valToPts(opts.dataBorder.pt) +
-						'" cap="flat"><a:solidFill>' +
+						'" cap="' + createLineCap(opts.lineCap) + '"><a:solidFill>' +
 						createColorElement(opts.dataBorder.color) +
 						'</a:solidFill><a:prstDash val="solid"/><a:round/></a:ln>'
 				}
@@ -995,7 +995,7 @@ function makeChartType(chartType: CHART_NAME, data: OptsChartData[], opts: IChar
 					if (opts.lineSize === 0) {
 						strXml += '<a:ln><a:noFill/></a:ln>'
 					} else {
-						strXml += '<a:ln w="' + valToPts(opts.lineSize) + '" cap="flat"><a:solidFill>' + createColorElement(tmpSerColor) + '</a:solidFill>'
+						strXml += '<a:ln w="' + valToPts(opts.lineSize) + '" cap="' + createLineCap(opts.lineCap) + '"><a:solidFill>' + createColorElement(tmpSerColor) + '</a:solidFill>'
 						strXml += '<a:prstDash val="' + (opts.lineDash || 'solid') + '"/><a:round/></a:ln>'
 					}
 
@@ -1978,4 +1978,17 @@ function createGridLineElement(glOpts: OptsChartGridLine): string {
 	strXml += '</c:majorGridlines>'
 
 	return strXml
+}
+
+function createLineCap(lineCap: ChartLineCap): string {
+	if (!lineCap || lineCap === 'flat') {
+		return 'flat';
+	} else if (lineCap === 'square') {
+		return 'sq';
+	} else if (lineCap === 'round') {
+		return 'rnd';
+	} else {
+		const neverLineCap: never = lineCap;
+		throw new Error(`Invalid chart line cap: ${neverLineCap}`);
+	}
 }
