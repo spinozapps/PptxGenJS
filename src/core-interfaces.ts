@@ -1160,6 +1160,10 @@ export interface OptsChartGridLine {
 	 * Gridline style
 	 */
 	style?: 'solid' | 'dash' | 'dot' | 'none'
+	/**
+	 * Line cap
+	 */
+	cap?: ChartLineCap
 }
 // TODO: 202008: chart types remain with predicated with "I" in v3.3.0 (ran out of time!)
 export interface IChartMulti {
@@ -1395,6 +1399,7 @@ export interface IChartPropsChartDoughnut {
 	dataNoEffects?: boolean
 	holeSize?: number
 }
+export type ChartLineCap = 'flat' | 'square' | 'round'
 export interface IChartPropsChartLine {
 	lineDash?: 'dash' | 'dashDot' | 'lgDash' | 'lgDashDot' | 'lgDashDotDot' | 'solid' | 'sysDash' | 'sysDot'
 	/**
@@ -1429,6 +1434,12 @@ export interface IChartPropsChartLine {
 	 * @default 2
 	 */
 	lineSize?: number
+	/**
+	 * MS-PPT > Chart format > Format Data Series > Line > Cap type
+	 * - line cap type
+	 * @default flat
+	 */
+	lineCap?: ChartLineCap
 	/**
 	 * MS-PPT > Chart format > Format Data Series > Line > Smoothed line
 	 * - "Smoothed line"
