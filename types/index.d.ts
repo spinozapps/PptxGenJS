@@ -391,6 +391,7 @@ declare namespace PptxGenJS {
 		'BAR' = 'bar',
 		'BAR3D' = 'bar3D',
 		'BUBBLE' = 'bubble',
+		'BUBBLE3D' = 'bubble3D',
 		'DOUGHNUT' = 'doughnut',
 		'LINE' = 'line',
 		'PIE' = 'pie',
@@ -591,6 +592,7 @@ declare namespace PptxGenJS {
 		'BAR' = 'bar',
 		'BAR3D' = 'bar3D',
 		'BUBBLE' = 'bubble',
+		'BUBBLE3D' = 'bubble3D',
 		'DOUGHNUT' = 'doughnut',
 		'LINE' = 'line',
 		'PIE' = 'pie',
@@ -612,7 +614,7 @@ declare namespace PptxGenJS {
 
 	// @source `core-interfaces.d.ts` (via import)
 	// @code `import { CHART_NAME, PLACEHOLDER_TYPES, SHAPE_NAME, SLIDE_OBJECT_TYPES, TEXT_HALIGN, TEXT_VALIGN } from './core-enums'`
-	export type CHART_NAME = 'area' | 'bar' | 'bar3D' | 'bubble' | 'doughnut' | 'line' | 'pie' | 'radar' | 'scatter'
+	export type CHART_NAME = 'area' | 'bar' | 'bar3D' | 'bubble' | 'bubble3D' | 'doughnut' | 'line' | 'pie' | 'radar' | 'scatter'
 	export enum PLACEHOLDER_TYPES {
 		'title' = 'title',
 		'body' = 'body',
@@ -2037,7 +2039,7 @@ declare namespace PptxGenJS {
 		 */
 		catAxes?: IChartPropsAxisCat[]
 		catAxisBaseTimeUnit?: string
-		catAxisCrossesAt?: number | 'autoZero'
+		catAxisCrossesAt?: number | 'autoZero' | 'min' | 'max'
 		catAxisHidden?: boolean
 		catAxisLabelColor?: string
 		catAxisLabelFontBold?: boolean
@@ -2061,7 +2063,7 @@ declare namespace PptxGenJS {
 		catAxisMinVal?: number
 		/** @since v3.11.0 */
 		catAxisMultiLevelLabels?: boolean
-		catAxisOrientation?: 'minMax'
+		catAxisOrientation?: 'minMax' | 'maxMin'
 		catAxisTitle?: string
 		catAxisTitleColor?: string
 		catAxisTitleFontFace?: string
@@ -2109,6 +2111,7 @@ declare namespace PptxGenJS {
 		 */
 		secondaryValAxis?: boolean
 		showValAxisTitle?: boolean
+		showSerName?: boolean
 		/**
 		 * Multi-Chart prop: array of val axes
 		 */
@@ -2140,7 +2143,7 @@ declare namespace PptxGenJS {
 		valAxisMaxVal?: number
 		valAxisMinorTickMark?: ChartAxisTickMark
 		valAxisMinVal?: number
-		valAxisOrientation?: 'minMax'
+		valAxisOrientation?: 'minMax' | 'maxMin'
 		valAxisTitle?: string
 		valAxisTitleColor?: string
 		valAxisTitleFontFace?: string
@@ -2287,6 +2290,7 @@ declare namespace PptxGenJS {
 		legendFontFace?: string
 		legendFontSize?: number
 		legendPos?: 'b' | 'l' | 'r' | 't' | 'tr'
+		legendLayout?: PositionProps
 	}
 	export interface IChartPropsTitle extends TextBaseProps {
 		title?: string
