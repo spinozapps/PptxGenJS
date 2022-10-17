@@ -29,7 +29,7 @@ import JSZip from 'jszip'
  * @param {JSZip} zip - file that the resulting XLSX should be added to
  * @return {Promise} promise of generating the XLSX file
  */
-export async function createExcelWorksheet (chartObject: ISlideRelChart, zip: JSZip): Promise<string> {
+export async function createExcelWorksheet (chartObject: ISlideRelChart, zip: JSZip, author: string): Promise<string> {
 	const data = chartObject.data
 
 	return await new Promise((resolve, reject) => {
@@ -85,8 +85,8 @@ export async function createExcelWorksheet (chartObject: ISlideRelChart, zip: JS
 			zipExcel.file(
 				'docProps/core.xml',
 				'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:dcmitype="http://purl.org/dc/dcmitype/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">' +
-				'<dc:creator>PptxGenJS</dc:creator>' +
-				'<cp:lastModifiedBy>PptxGenJS</cp:lastModifiedBy>' +
+				`<dc:creator>${encodeXmlEntities(author)}</dc:creator>` +
+				`<cp:lastModifiedBy>${encodeXmlEntities(author)}</cp:lastModifiedBy>` +
 				'<dcterms:created xsi:type="dcterms:W3CDTF">' +
 				new Date().toISOString() +
 				'</dcterms:created>' +

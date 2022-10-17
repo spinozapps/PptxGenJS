@@ -422,7 +422,7 @@ export default class PptxGenJS implements IPresentationProps {
 	 * @param {Promise<string>[]} chartPromises - promise array
 	 */
 	private readonly createChartMediaRels = (slide: PresSlide | SlideLayout, zip: JSZip, chartPromises: Array<Promise<string>>): void => {
-		slide._relsChart.forEach(rel => chartPromises.push(genCharts.createExcelWorksheet(rel, zip)))
+		slide._relsChart.forEach(rel => chartPromises.push(genCharts.createExcelWorksheet(rel, zip, this.author)))
 		slide._relsMedia.forEach(rel => {
 			if (rel.type !== 'online' && rel.type !== 'hyperlink') {
 				// A: Loop vars
