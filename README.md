@@ -11,6 +11,49 @@
 
 [![Known Vulnerabilities](https://snyk.io/test/npm/pptxgenjs/badge.svg)](https://snyk.io/test/npm/pptxgenjs) [![npm downloads](https://img.shields.io/npm/dm/pptxgenjs.svg)](https://www.npmjs.com/package/pptxgenjs) [![jsdelivr downloads](https://data.jsdelivr.com/v1/package/gh/gitbrent/pptxgenjs/badge)](https://www.jsdelivr.com/package/gh/gitbrent/pptxgenjs) [![typescripts definitions](https://img.shields.io/npm/types/pptxgenjs)](https://img.shields.io/npm/types/pptxgenjs)
 
+# Spinozapps additions
+
+This package is a variation of https://github.com/gitbrent/PptxGenJS with changes we proposed as pull requests integrated, and published under our NPM organization:
+
+```sh
+git clone git@github.com:gitbrent/PptxGenJS.git
+git remote add spinozapps git@github.com:spinozapps/PptxGenJS.git
+
+# Start from base version
+git checkout v3.11.0
+
+# https://github.com/gitbrent/PptxGenJS/pull/1021
+git cherry-pick 274fc9d30c665af30d352a629a86ae97f4913aed
+
+# https://github.com/gitbrent/PptxGenJS/pull/1025
+git cherry-pick b7932d08b48a416eafa38ed03a471163d221ba8d
+
+# https://github.com/gitbrent/PptxGenJS/pull/1126, has conflicts
+git cherry-pick 220ec2b5566289802e11b8dae299bfeaef51143a
+
+# https://github.com/spinozapps/PptxGenJS/pull/new/types/misc 220bf4b646a358e5fdcf6b66859b0aa8f10a27b3
+git cherry-pick 220bf4b646a358e5fdcf6b66859b0aa8f10a27b3
+
+# Include build steps, look for commit id in https://github.com/spinozapps/PptxGenJS
+# Note: there will be a conflict on package.json version field, set it to the next version to be published
+git cherry-pick xxx
+
+# Update steps + modify last commit with them
+git commit --amend
+
+# Build library
+docker build . -t pptxgenjs
+
+# Test it locally
+docker run --rm -v $(pwd):/shared pptxgenjs cp -r /app/dist /shared
+
+# Publish (set NPM_TOKEN to an actual token created on https://www.npmjs.com/ > Profile picture > Access Tokens)
+docker run --rm -e NPM_TOKEN=... pptxgenjs npm publish --access public
+
+git tag v3.11.0-spinozapps.2
+git push spinozapps v3.11.0-spinozapps.2
+```
+
 # Table of Contents
 
 - [Table of Contents](#table-of-contents)
