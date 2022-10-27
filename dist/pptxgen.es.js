@@ -1,4 +1,4 @@
-/* PptxGenJS 3.12.0 @ 2023-03-20T03:12:31.367Z */
+/* PptxGenJS 3.12.0-spinozapps.1 @ 2023-09-06T12:48:02.578Z */
 import JSZip from 'jszip';
 
 /******************************************************************************
@@ -2973,7 +2973,7 @@ var Slide = /** @class */ (function () {
  * @param {JSZip} zip - file that the resulting XLSX should be added to
  * @return {Promise} promise of generating the XLSX file
  */
-function createExcelWorksheet(chartObject, zip) {
+function createExcelWorksheet(chartObject, zip, author) {
     return __awaiter(this, void 0, void 0, function () {
         var data;
         return __generator(this, function (_a) {
@@ -3021,8 +3021,8 @@ function createExcelWorksheet(chartObject, zip) {
                                     '<Company></Company><LinksUpToDate>false</LinksUpToDate><SharedDoc>false</SharedDoc><HyperlinksChanged>false</HyperlinksChanged><AppVersion>16.0300</AppVersion>' +
                                     '</Properties>\n');
                                 zipExcel.file('docProps/core.xml', '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:dcmitype="http://purl.org/dc/dcmitype/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">' +
-                                    '<dc:creator>PptxGenJS</dc:creator>' +
-                                    '<cp:lastModifiedBy>PptxGenJS</cp:lastModifiedBy>' +
+                                    "<dc:creator>".concat(encodeXmlEntities(author), "</dc:creator>") +
+                                    "<cp:lastModifiedBy>".concat(encodeXmlEntities(author), "</cp:lastModifiedBy>") +
                                     '<dcterms:created xsi:type="dcterms:W3CDTF">' +
                                     new Date().toISOString() +
                                     '</dcterms:created>' +
@@ -3599,11 +3599,24 @@ function makeXmlCharts(rel) {
         strXml += '  </c:spPr>';
         strXml += '</c:plotArea>';
         // OPTION: Legend
-        // IMPORTANT: Dont specify layout to enable auto-fit: PPT does a great job maximizing space with all 4 TRBL locations
+        // RECOMMENDED: Dont specify layout to enable auto-fit: PPT does a great job maximizing space with all 4 TRBL locations
         if (rel.opts.showLegend) {
             strXml += '<c:legend>';
-            strXml += '<c:legendPos val="' + rel.opts.legendPos + '"/>';
-            // strXml += '<c:layout/>'
+            if (rel.opts.legendLayout) {
+                strXml += '<c:layout>';
+                strXml += ' <c:manualLayout>';
+                strXml += '  <c:xMode val="edge" />';
+                strXml += '  <c:yMode val="edge" />';
+                strXml += '  <c:x val="' + (rel.opts.legendLayout.x || 0) + '" />';
+                strXml += '  <c:y val="' + (rel.opts.legendLayout.y || 0) + '" />';
+                strXml += '  <c:w val="' + (rel.opts.legendLayout.w || 1) + '" />';
+                strXml += '  <c:h val="' + (rel.opts.legendLayout.h || 0.25) + '" />';
+                strXml += ' </c:manualLayout>';
+                strXml += '</c:layout>';
+            }
+            else {
+                strXml += '<c:legendPos val="' + rel.opts.legendPos + '"/>';
+            }
             strXml += '<c:overlay val="0"/>';
             if (rel.opts.legendFontFace || rel.opts.legendFontSize || rel.opts.legendColor) {
                 strXml += '<c:txPr>';
@@ -5837,9 +5850,10 @@ function genXmlParagraphProperties(textObj, isDefault) {
         if (typeof textObj.options.bullet === 'object') {
             if ((_b = (_a = textObj === null || textObj === void 0 ? void 0 : textObj.options) === null || _a === void 0 ? void 0 : _a.bullet) === null || _b === void 0 ? void 0 : _b.indent)
                 bulletMarL = valToPts(textObj.options.bullet.indent);
+            var bulletCancelling = textObj.options.bullet.cancelling ? valToPts(textObj.options.bullet.cancelling) : bulletMarL;
             if (textObj.options.bullet.type) {
                 if (textObj.options.bullet.type.toString().toLowerCase() === 'number') {
-                    paragraphPropXml += " marL=\"".concat(textObj.options.indentLevel && textObj.options.indentLevel > 0 ? bulletMarL + bulletMarL * textObj.options.indentLevel : bulletMarL, "\" indent=\"-").concat(bulletMarL, "\"");
+                    paragraphPropXml += " marL=\"".concat(textObj.options.indentLevel && textObj.options.indentLevel > 0 ? bulletMarL + bulletMarL * textObj.options.indentLevel : bulletMarL, "\" indent=\"-").concat(bulletCancelling, "\"");
                     strXmlBullet = "<a:buSzPct val=\"100000\"/><a:buFont typeface=\"+mj-lt\"/><a:buAutoNum type=\"".concat(textObj.options.bullet.style || 'arabicPeriod', "\" startAt=\"").concat(textObj.options.bullet.numberStartAt || textObj.options.bullet.startAt || '1', "\"/>");
                 }
             }
@@ -5850,7 +5864,7 @@ function genXmlParagraphProperties(textObj, isDefault) {
                     console.warn('Warning: `bullet.characterCode should be a 4-digit unicode charatcer (ex: 22AB)`!');
                     bulletCode = BULLET_TYPES.DEFAULT;
                 }
-                paragraphPropXml += " marL=\"".concat(textObj.options.indentLevel && textObj.options.indentLevel > 0 ? bulletMarL + bulletMarL * textObj.options.indentLevel : bulletMarL, "\" indent=\"-").concat(bulletMarL, "\"");
+                paragraphPropXml += " marL=\"".concat(textObj.options.indentLevel && textObj.options.indentLevel > 0 ? bulletMarL + bulletMarL * textObj.options.indentLevel : bulletMarL, "\" indent=\"-").concat(bulletCancelling, "\"");
                 strXmlBullet = '<a:buSzPct val="100000"/><a:buChar char="' + bulletCode + '"/>';
             }
             else if (textObj.options.bullet.code) {
@@ -5861,7 +5875,7 @@ function genXmlParagraphProperties(textObj, isDefault) {
                     console.warn('Warning: `bullet.code should be a 4-digit hex code (ex: 22AB)`!');
                     bulletCode = BULLET_TYPES.DEFAULT;
                 }
-                paragraphPropXml += " marL=\"".concat(textObj.options.indentLevel && textObj.options.indentLevel > 0 ? bulletMarL + bulletMarL * textObj.options.indentLevel : bulletMarL, "\" indent=\"-").concat(bulletMarL, "\"");
+                paragraphPropXml += " marL=\"".concat(textObj.options.indentLevel && textObj.options.indentLevel > 0 ? bulletMarL + bulletMarL * textObj.options.indentLevel : bulletMarL, "\" indent=\"-").concat(bulletCancelling, "\"");
                 strXmlBullet = '<a:buSzPct val="100000"/><a:buChar char="' + bulletCode + '"/>';
             }
             else {
@@ -6769,7 +6783,7 @@ var PptxGenJS = /** @class */ (function () {
          * @param {Promise<string>[]} chartPromises - promise array
          */
         this.createChartMediaRels = function (slide, zip, chartPromises) {
-            slide._relsChart.forEach(function (rel) { return chartPromises.push(createExcelWorksheet(rel, zip)); });
+            slide._relsChart.forEach(function (rel) { return chartPromises.push(createExcelWorksheet(rel, zip, _this.author)); });
             slide._relsMedia.forEach(function (rel) {
                 if (rel.type !== 'online' && rel.type !== 'hyperlink') {
                     // A: Loop vars

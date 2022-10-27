@@ -11,6 +11,49 @@
 
 [![Known Vulnerabilities](https://snyk.io/test/npm/pptxgenjs/badge.svg)](https://snyk.io/test/npm/pptxgenjs) [![npm downloads](https://img.shields.io/npm/dm/pptxgenjs.svg)](https://www.npmjs.com/package/pptxgenjs) [![jsdelivr downloads](https://data.jsdelivr.com/v1/package/gh/gitbrent/pptxgenjs/badge)](https://www.jsdelivr.com/package/gh/gitbrent/pptxgenjs) [![typescripts definitions](https://img.shields.io/npm/types/pptxgenjs)](https://img.shields.io/npm/types/pptxgenjs)
 
+# Spinozapps additions
+
+This package is a variation of https://github.com/gitbrent/PptxGenJS with changes we proposed as pull requests integrated, and published under our NPM organization:
+
+```sh
+git clone git@github.com:gitbrent/PptxGenJS.git
+git remote add spinozapps git@github.com:spinozapps/PptxGenJS.git
+
+# Start from base version
+git checkout v3.12.0
+
+# https://github.com/gitbrent/PptxGenJS/pull/1021
+git cherry-pick d74d90846d1783e7e7c2358503e7078fa94e8f0f
+
+# https://github.com/gitbrent/PptxGenJS/pull/1025
+git cherry-pick e5aba31dd1fd3001d6907602a832de49045f11f2
+
+# https://github.com/spinozapps/PptxGenJS/pull/new/types/misc
+git cherry-pick 51573f12fa5470a9bab4865dd7295f7f336f3e77
+
+# 0% gap width on bar chart
+git cherry-pick 446d167e847a7937d04785fde4017437dde5cdd5
+
+# Include build steps, look for commit id in https://github.com/spinozapps/PptxGenJS
+# Note: there will be a conflict on package.json version field, set it to the next version to be published
+git cherry-pick xxx
+
+# Update steps + modify last commit with them
+git commit --amend
+
+# Build library
+docker build . -t pptxgenjs
+
+# Test it locally
+docker run --rm -v $(pwd):/shared pptxgenjs cp -r /app/dist /shared
+
+# Publish (set NPM_TOKEN to an actual token created on https://www.npmjs.com/ > Profile picture > Access Tokens)
+docker run --rm -e NPM_TOKEN=... pptxgenjs npm publish --access public
+
+git tag v3.12.0-spinozapps.2
+git push spinozapps v3.12.0-spinozapps.2
+```
+
 # Table of Contents
 
 - [Table of Contents](#table-of-contents)
