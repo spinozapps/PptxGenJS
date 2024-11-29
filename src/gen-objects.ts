@@ -220,7 +220,9 @@ export function addChartDefinition (target: PresSlide, type: CHART_NAME | IChart
 		if (!['clustered', 'stacked', 'standard', 'percentStacked'].includes(options.barGrouping || '')) options.barGrouping = 'standard'
 	}
 	if (options.barGrouping?.includes('tacked')) {
-		if (!options.barGapWidthPct) options.barGapWidthPct = 50
+		if (typeof options.barGapWidthPct !== 'number') {
+			options.barGapWidthPct = 50
+		}
 	}
 	// Clean up and validate data label positions
 	// REFERENCE: https://docs.microsoft.com/en-us/openspecs/office_standards/ms-oi29500/e2b1697c-7adc-463d-9081-3daef72f656f?redirectedfrom=MSDN
